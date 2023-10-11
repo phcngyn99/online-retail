@@ -6,4 +6,4 @@ SELECT
 FROM
     {{ source('online_retail','raw') }}
 WHERE
-    StockCode IS NOT NULL
+    StockCode IS NOT NULL AND UnitPrice > 0
