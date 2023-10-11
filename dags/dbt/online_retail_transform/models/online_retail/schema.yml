@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: online_retail
+    database: cdp-customer-data-platform
+    schema: online_retail  
+    tables:
+      - name: raw
+        columns:
+          - name: InvoiceNo
+            test:
+              - not_null

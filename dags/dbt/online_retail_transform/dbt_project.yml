@@ -35,3 +35,14 @@ models:
     # Config indicated by + and applies to all files under models/example/
     example:
       +materialized: view
+      my_first_dbt_model:
+        enabled: FALSE
+      my_second_dbt_model:
+        enabled: FALSE
+
+    online_retail:
+      +materialized: table
+
+    exclude:
+      - models/example/my_first_dbt_model.sql
+      - models/example/my_second_dbt_model.sql

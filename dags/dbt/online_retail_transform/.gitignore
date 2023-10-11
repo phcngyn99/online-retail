@@ -4,3 +4,4 @@ dbt_packages/
 logs/
 profiles.yml
 dbt_venv/
+models/example
