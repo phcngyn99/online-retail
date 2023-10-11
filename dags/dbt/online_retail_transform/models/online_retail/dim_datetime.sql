@@ -1,3 +1,4 @@
+{{ config(materialized='table') }}
 WITH R1 AS (
   SELECT
     DISTINCT(InvoiceDate) AS datetime_id,

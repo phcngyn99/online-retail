@@ -1,3 +1,4 @@
+{{ config(materialized='table') }}
 SELECT
     DISTINCT(StockCode) AS product_id,
     Description AS product_name,
