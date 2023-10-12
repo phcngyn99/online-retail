@@ -5,6 +5,8 @@ from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesyste
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 
+from airflow.models.baseoperator import chain
+
 project = "cdp-customer-data-platform"
 dataset = "online_retail"
 bucket = "project-dataset-kaggle"
@@ -52,6 +54,6 @@ def online_retail():
         ],
         write_disposition= "WRITE_TRUNCATE" #Overwrite if existed
     )
-    
+    upload_csv_to_gcs >> create_bq_dataset >>gcs_to_bq
 online_retail()
     
