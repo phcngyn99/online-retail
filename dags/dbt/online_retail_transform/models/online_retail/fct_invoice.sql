@@ -14,6 +14,7 @@ WITH fact AS
         END AS status
     FROM
         {{ source('online_retail','raw') }}
+    WHERE Quantity * UnitPrice != 0
 )
 SELECT
     fact.invoice_id,
