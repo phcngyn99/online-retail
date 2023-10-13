@@ -1,21 +1,24 @@
-import os
 from airflow.decorators import dag, task
-from datetime import datetime
+from pendulum import datetime, duration
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
-
+from cosmos import DbtTaskGroup
 from airflow.models.baseoperator import chain
+import config
 
-project = "cdp-customer-data-platform"
-dataset = "online_retail"
-bucket = "project-dataset-kaggle"
 
 @dag(
     start_date= datetime(2023,1,1),
     schedule= None,
     catchup= False,
-    tags= ['online_retail'] #DAG id
+    tags= ['online_retail'],
+    # default_args={
+    #     "retries": 3,
+    #     "retry_delay": duration(seconds=2),
+    #     "retry_exponential_backoff": True,
+    #     "max_retry_delay": duration(minutes=2),
+    # },
 )
 
 def online_retail():
@@ -24,23 +27,23 @@ def online_retail():
         task_id= "upload_csv_to_gcs",
         src= "/usr/local/airflow/include/dataset/online_retail.csv",
         dst= "raw/online_retail.csv",
-        bucket= f"{bucket}",
+        bucket= f"{config.bucket}",
         gcp_conn_id= "gcp",
         mime_type= "text/csv"
     )
     
     create_bq_dataset= BigQueryCreateEmptyDatasetOperator(
         task_id = "create_bq_dataset",
-        dataset_id= f"{dataset}",
+        dataset_id= f"{config.dataset}",
         gcp_conn_id= "gcp",
         if_exists= "ignore"
     )
 
     gcs_to_bq = GCSToBigQueryOperator(
         task_id = "gcs_to_bq",
-        bucket= f"{bucket}",
+        bucket= f"{config.bucket}",
         source_objects="raw/online_retail.csv",
-        destination_project_dataset_table= f"{project}.{dataset}.raw",
+        destination_project_dataset_table= f"{config.project}.{config.dataset}.raw",
         gcp_conn_id= "gcp",
         schema_fields= [
             {"name": "InvoiceNo", "type": "STRING", "mode": "NULLABLE"},
@@ -54,6 +57,19 @@ def online_retail():
         ],
         write_disposition= "WRITE_TRUNCATE" #Overwrite if existed
     )
-    upload_csv_to_gcs >> create_bq_dataset >>gcs_to_bq
-online_retail()
     
+    transform = DbtTaskGroup(
+        group_id= "transform",
+        project_config = config.project_config,
+        profile_config = config.profile_config,
+        execution_config= config.execution_config,
+        render_config = config.render_config
+    )
+    chain(
+        upload_csv_to_gcs,
+        create_bq_dataset,
+        gcs_to_bq,
+        transform
+    )
+    
+online_retail()

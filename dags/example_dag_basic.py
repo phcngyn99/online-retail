@@ -11,8 +11,8 @@ from airflow.decorators import (
 # it is decorating if not explicitly set. In this example, the "dag_id" value would be "example_dag_basic".
 @dag(
     # This defines how often your DAG will run, or the schedule by which your DAG runs. In this case, this DAG
-    # will run daily
-    schedule="@daily",
+    # will run daily if set to @daily
+    schedule=None,
     # This DAG is set to run for the first time on January 1, 2023. Best practice is to use a static
     # start_date. Subsequent DAG runs are instantiated based on the schedule
     start_date=datetime(2023, 1, 1),
