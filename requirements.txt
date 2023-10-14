@@ -4,4 +4,8 @@ apache-airflow-providers-google
 astronomer-cosmos
 protobuf
 paramiko
+great-expectations
+airflow-provider-great-expectations
+apache-airflow-providers-dbt-cloud
+apache-airflow-providers-sftp
 #airflow.providers.dbt

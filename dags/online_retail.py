@@ -3,6 +3,10 @@ from pendulum import datetime, duration
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
+from great_expectations_provider.operators.great_expectations import (
+    GreatExpectationsOperator,
+)
+
 from cosmos import DbtTaskGroup
 from airflow.models.baseoperator import chain
 import config
@@ -65,6 +69,17 @@ def online_retail():
         execution_config= config.execution_config,
         render_config = config.render_config
     )
+
+    #quality check
+    gx_validate_bq = GreatExpectationsOperator(
+        task_id = "quality_check",
+        conn_id= "gcp",
+        data_context_root_dir= "include/gx",
+        expectation_suite_name= "online_retail_suite",
+        data_asset_name= f"{config.project}.{config.dataset}.raw",
+        return_json_dict= True,
+    )
+
     chain(
         upload_csv_to_gcs,
         create_bq_dataset,
