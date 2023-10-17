@@ -29,7 +29,7 @@ execution_config = ExecutionConfig(dbt_executable_path=f"{os.environ['AIRFLOW_HO
 render_config = RenderConfig(
     load_method=LoadMode.AUTOMATIC,
     select=["path:models/online_retail"],
-    #test_behavior=TestBehavior.AFTER_EACH
+    test_behavior=TestBehavior.AFTER_EACH
 )
 
 data_context_config = None

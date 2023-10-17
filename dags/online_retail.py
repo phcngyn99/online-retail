@@ -71,22 +71,23 @@ def online_retail():
     )
 
     #quality check
-    gx_validate_bq = GreatExpectationsOperator(
-        task_id = "quality_check",
-        conn_id= "gcp",
-        data_asset_name= f"{config.project}.{config.dataset}.fct_invoice",
-        data_context_root_dir= "include/gx",
-        #data_context_config= config.data_context_config,
-        expectation_suite_name= "online_retail_suite",
-        fail_task_on_validation_failure= False,
-        return_json_dict= True,
-    )
+    def validate(): 
+        gx_validate_bq = GreatExpectationsOperator(
+            task_id = "quality_check",
+            conn_id= "gcp",
+            data_asset_name= f"{config.project}.{config.dataset}.fct_invoice",
+            data_context_root_dir= "include/gx",
+            #data_context_config= config.data_context_config,
+            expectation_suite_name= "online_retail_suite",
+            fail_task_on_validation_failure= False,
+            return_json_dict= True,
+        )
 
     chain(
         upload_csv_to_gcs,
         create_bq_dataset,
         gcs_to_bq,
         transform
-    )
+    ) 
     
 online_retail()

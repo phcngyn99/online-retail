@@ -10,3 +10,73 @@ sources:
           - name: InvoiceNo
             test:
               - not_null
+
+models:
+  - name: dim_customer
+    description: "Customer dimension"
+    columns:
+      - name: customer_id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_datetime
+    description: "Datetime dimension"
+    columns:
+      - name: datetime_id
+        description: "The primary key for this table"
+        tests:
+          - not_null
+
+  - name: dim_product
+    description: "Product dimension"
+    columns:
+      - name: product_id
+        description: "The primary key for this table"
+        tests:
+          - not_null
+
+  - name: fct_invoice
+    description: "Fact table"
+    tests:
+      - dbt_utils.expression_is_true:
+          expression : "total_value != 0"
+    columns:
+      - name: invoice_id
+        description: "The primary key for this table"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+
+      - name: datetime_id
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              to: ref('dim_datetime')
+              field: datetime_id
+
+      - name: customer_id
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_id
+
+      - name: product_id
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+
+      - name: status
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - accepted_values:
+              values: ['Cancel','Succeed']
+      - name: total_value
+        tests:
+        - dbt_expectations.expect_column_to_exist
+    
+
