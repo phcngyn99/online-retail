@@ -31,3 +31,5 @@ render_config = RenderConfig(
     select=["path:models/online_retail"],
     #test_behavior=TestBehavior.AFTER_EACH
 )
+
+data_context_config = None

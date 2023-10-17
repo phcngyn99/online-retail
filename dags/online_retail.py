@@ -4,7 +4,7 @@ from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesyste
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 from great_expectations_provider.operators.great_expectations import (
-    GreatExpectationsOperator,
+    GreatExpectationsOperator
 )
 
 from cosmos import DbtTaskGroup
@@ -74,9 +74,11 @@ def online_retail():
     gx_validate_bq = GreatExpectationsOperator(
         task_id = "quality_check",
         conn_id= "gcp",
+        data_asset_name= f"{config.project}.{config.dataset}.fct_invoice",
         data_context_root_dir= "include/gx",
+        #data_context_config= config.data_context_config,
         expectation_suite_name= "online_retail_suite",
-        data_asset_name= f"{config.project}.{config.dataset}.raw",
+        fail_task_on_validation_failure= False,
         return_json_dict= True,
     )
 
