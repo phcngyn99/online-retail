@@ -8,6 +8,9 @@ project = "cdp-customer-data-platform"
 dataset = "online_retail"
 bucket = "project-dataset-kaggle"
 keyfile = "/usr/local/airflow/include/GCP/cdp-customer-data-platform-51fff5265ec4.json"
+dbt_project_path = Path("/usr/local/airflow/dags/dbt/online_retail_transform")
+dbt_executable_path=f"{os.environ['AIRFLOW_HOME']}/dbt_venv/bin/dbt"
+dbt_env_path = Path("/usr/local/airflow/dbt_venv/bin/activate")
 
 # Config for Cosmos
 profile_config = ProfileConfig(
@@ -24,8 +27,8 @@ profile_config = ProfileConfig(
     # Using profile_mapping or config below
     # profiles_yml_filepath = Path("/usr/local/airflow/dags/dbt/online_retail_transform/profiles.yml")
 )
-project_config =  ProjectConfig(dbt_project_path = Path("/usr/local/airflow/dags/dbt/online_retail_transform"))
-execution_config = ExecutionConfig(dbt_executable_path=f"{os.environ['AIRFLOW_HOME']}/dbt_venv/bin/dbt",)
+project_config =  ProjectConfig(dbt_project_path = dbt_project_path)
+execution_config = ExecutionConfig(dbt_executable_path = dbt_executable_path,)
 render_config = RenderConfig(
     load_method=LoadMode.AUTOMATIC,
     select=["path:models/online_retail"],

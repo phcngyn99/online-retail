@@ -3,6 +3,7 @@ from pendulum import datetime, duration
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
+from airflow.operators.bash import BashOperator
 from great_expectations_provider.operators.great_expectations import (
     GreatExpectationsOperator
 )
@@ -73,7 +74,7 @@ def online_retail():
     #quality check
     def validate(): 
         gx_validate_bq = GreatExpectationsOperator(
-            task_id = "quality_check",
+            task_id = "validate",
             conn_id= "gcp",
             data_asset_name= f"{config.project}.{config.dataset}.fct_invoice",
             data_context_root_dir= "include/gx",
@@ -83,10 +84,21 @@ def online_retail():
             return_json_dict= True,
         )
 
+    check_raw_data = BashOperator(
+        task_id = "check_raw_data",
+        cwd= config.dbt_project_path,
+        env= {
+            "dbt_env_path" :config.dbt_env_path
+        },
+        bash_command= "source $dbt_env_path && dbt test -s source:online_retail.raw",
+        # bash_command= "dbt-act && dbt test -s source:online_retail.raw" #dbt-act is an alias to ... see more in dockerfile
+    )
+
     chain(
         upload_csv_to_gcs,
         create_bq_dataset,
         gcs_to_bq,
+        check_raw_data,
         transform
     ) 
     

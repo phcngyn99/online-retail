@@ -8,8 +8,44 @@ sources:
       - name: raw
         columns:
           - name: InvoiceNo
-            test:
+            tests:
               - not_null
+              - dbt_expectations.expect_column_to_exist
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: string
+
+          - name: StockCode
+            tests:
+              - dbt_expectations.expect_column_to_exist
+
+          - name: Description
+            tests:
+              - dbt_expectations.expect_column_to_exist
+
+          - name: Quantity
+            tests:
+              - dbt_expectations.expect_column_to_exist
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: numeric
+
+          - name: InvoiceDate
+            tests:
+              - dbt_expectations.expect_column_to_exist
+
+          - name: UnitPrice
+            tests:
+              - dbt_expectations.expect_column_to_exist
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: numeric
+
+          - name: CustomerID
+            tests:
+              - dbt_expectations.expect_column_to_exist
+
+          - name: Country
+            tests:
+              - dbt_expectations.expect_column_to_exist
+
 
 models:
   - name: dim_customer
