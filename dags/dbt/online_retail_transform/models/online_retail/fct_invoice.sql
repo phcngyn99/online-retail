@@ -2,9 +2,9 @@
 WITH fact AS
 (
     SELECT
-        InvoiceNo AS invoice_id,
+        DISTINCT InvoiceNo AS invoice_id,
         InvoiceDate AS datetime_id,
-        {{ dbt_utils.generate_surrogate_key(['CustomerID','Country']) }} AS customer_id,
+        {{ dbt_utils.generate_surrogate_key(['CustomerID','Country']) }} as customer_id,
         StockCode AS product_id,
         Quantity * UnitPrice AS total_value,
         Quantity AS quantity,
@@ -16,19 +16,20 @@ WITH fact AS
         {{ source('online_retail','raw') }}
     WHERE Quantity * UnitPrice != 0
 )
-SELECT
-    fact.invoice_id,
-    dim_datetime.datetime_id,
-    dim_customer.customer_id,
-    dim_product.product_id,
-    fact.total_value,
-    fact.quantity,
-    fact.status
-FROM 
-    fact 
-        JOIN {{ref("dim_datetime")}} dim_datetime
-        ON fact.datetime_id = dim_datetime.datetime_id
-        JOIN {{ref("dim_customer")}} dim_customer
-        ON fact.customer_id = dim_customer.customer_id
-        JOIN {{ref("dim_product")}} dim_product
-        ON fact.product_id = dim_product.product_id
+SELECT * FROM fact
+-- SELECT
+--     fact.invoice_id,
+--     dim_datetime.datetime_id,
+--     dim_customer.customer_id,
+--     dim_product.product_id,
+--     fact.total_value,
+--     fact.quantity,
+--     fact.status
+-- FROM 
+--     fact 
+--         INNER JOIN {{ref("dim_datetime")}} dim_datetime
+--             ON fact.datetime_id = dim_datetime.datetime_id
+--         INNER JOIN {{ref("dim_customer")}} dim_customer
+--             ON fact.customer_id = dim_customer.customer_id
+--         INNER JOIN {{ref("dim_product")}} dim_product
+--             ON fact.product_id = dim_product.product_id

@@ -20,3 +20,5 @@ Analytics Engineering project with Kaggle dataset.
     - UnitPrice: Unit price. Numeric, Product price per unit in sterling. 
     - CustomerID: Customer number. Nominal, a 5-digit integral number uniquely assigned to each customer. 
     - Country: Country name. Nominal, the name of the country where each customer resides.
+
+![alt text for screen readers](data_model.jpg "Star Schema")

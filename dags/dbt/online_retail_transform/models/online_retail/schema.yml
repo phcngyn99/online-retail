@@ -78,6 +78,8 @@ models:
     tests:
       - dbt_utils.expression_is_true:
           expression : "total_value != 0"
+      - dbt_utils.fewer_rows_than:
+          compare_model: source('online_retail','raw')
     columns:
       - name: invoice_id
         description: "The primary key for this table"
