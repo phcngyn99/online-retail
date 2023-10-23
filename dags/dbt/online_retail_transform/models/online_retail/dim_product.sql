@@ -1,6 +1,6 @@
 {{ config(materialized='table') }}
 SELECT
-    DISTINCT(StockCode) AS product_id,
+    DISTINCT {{ dbt_utils.generate_surrogate_key(['StockCode','Description','UnitPrice']) }} AS product_id,
     Description AS product_name,
     UnitPrice AS product_price
 FROM
