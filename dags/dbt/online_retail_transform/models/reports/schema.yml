@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: online_retail
+    database: cdp-customer-data-platform
+    schema: online_retail  
+    tables:
+      - name: dim_customer
+      - name: dim_datetime
+      - name: dim_product
+      - name: fct_invoice
