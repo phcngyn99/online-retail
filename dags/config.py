@@ -35,4 +35,11 @@ render_config = RenderConfig(
     test_behavior=TestBehavior.AFTER_EACH
 )
 
+def set_path_render_config(path):
+    return RenderConfig(
+        load_method=LoadMode.AUTOMATIC,
+        select=path,
+        test_behavior=TestBehavior.AFTER_EACH
+    )
+
 data_context_config = None

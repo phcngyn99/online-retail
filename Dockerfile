@@ -5,7 +5,7 @@ RUN python -m venv dbt_venv && source dbt_venv/bin/activate && \
     pip install --no-cache-dir dbt-bigquery && deactivate
 
 # Airflow
-ENV AIRFLOW__CORE__ENABLE_XCOM_PICKLING=true
+#ENV AIRFLOW__CORE__ENABLE_XCOM_PICKLING=true
 
 # Alias
 RUN echo "alias cl='clear'" >> ~/.bashrc && source ~/.bashrc
