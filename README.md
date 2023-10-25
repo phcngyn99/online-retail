@@ -1,7 +1,9 @@
 # Online Retail
 Analytics Engineering project with Kaggle dataset.
 
-#### Online Retail Raw Dataset
+#### [Final Report](https://lookerstudio.google.com/u/0/reporting/a9212a13-d175-4d19-bc5b-92396afc6689/page/p_3k96xp21ad)
+
+#### [Dataset](https://www.kaggle.com/datasets/tunguz/online-retail)
     - InvoiceNo: string 
     - StockCode: string 
     - Description: string
@@ -11,14 +13,8 @@ Analytics Engineering project with Kaggle dataset.
     - CustomerID: string
     - Country: string
 
-#### Attribute Information:
-    - InvoiceNo: Invoice number. Nominal, a 6-digit integral number uniquely assigned to each transaction. If this code starts with letter 'c', it indicates a cancellation. 
-    - StockCode: Product (item) code. Nominal, a 5-digit integral number uniquely assigned to each distinct product.
-    - Description: Product (item) name. Nominal. 
-    - Quantity: The quantities of each product (item) per transaction. Numeric. 
-    - InvoiceDate: Invice Date and time. Numeric, the day and time when each transaction was generated. 
-    - UnitPrice: Unit price. Numeric, Product price per unit in sterling. 
-    - CustomerID: Customer number. Nominal, a 5-digit integral number uniquely assigned to each customer. 
-    - Country: Country name. Nominal, the name of the country where each customer resides.
+#### Data Model
+![alt text for screen readers](/include/dataset/data_model.jpg "Star Schema")
 
-![alt text for screen readers](data_model.jpg "Star Schema")
+#### DAG
+![alt text for screen readers](/include/dataset/dag.png "Flow")
